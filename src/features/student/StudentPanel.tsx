@@ -10,6 +10,7 @@ import type { GradeResponse, StudentResponse } from "@/api/students.api";
 import { useAuth } from "@/features/auth/AuthContext";
 import { ENTREGAS_MOCK } from "@/constants/mockData";
 import type { StudentSection } from "@/types";
+import { AcademicAssistant } from "./AcademicAssistant";
 
 export function StudentPanel() {
   const { user, logout, switchUser } = useAuth();
@@ -77,6 +78,7 @@ export function StudentPanel() {
             {section === "dashboard"   && "Dashboard"}
             {section === "cursos"      && "Mis Cursos"}
             {section === "rendimiento" && "Rendimiento Académico"}
+            {section === "asistente"   && "Asistente Académico"}
           </h1>
           <p style={{ fontSize: 13, color: C.textMuted, marginTop: 2 }}>
             {user?.companyName ?? "Ciclo Escolar 2026-1"}
@@ -172,6 +174,10 @@ export function StudentPanel() {
                 ))}
             </div>
           </div>
+        )}
+
+        {!loading && section === "asistente" && (
+          <AcademicAssistant notas={notas} promedio={promedio} />
         )}
 
         {!loading && section === "rendimiento" && (

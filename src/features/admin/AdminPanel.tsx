@@ -7,6 +7,7 @@ import { dashboardApi } from "@/api/dashboard.api";
 import type { DashboardStats } from "@/api/dashboard.api";
 import { useAuth } from "@/features/auth/AuthContext";
 import { CrudUsuarios } from "./CrudUsuarios";
+import { StatisticsPanel } from "./StatisticsPanel";
 import type { AdminSection } from "@/types";
 
 export function AdminPanel() {
@@ -73,12 +74,14 @@ export function AdminPanel() {
       <div style={{ padding: "28px 32px", fontFamily: "'Inter', sans-serif" }}>
         <div style={{ marginBottom: 22 }}>
           <h1 style={{ fontSize: 21, fontWeight: 800, color: C.text }}>
-            {section === "dashboard" ? "Dashboard General" : "Control de Usuarios"}
+            {section === "dashboard" && "Dashboard General"}
+            {section === "usuarios" && "Control de Usuarios"}
+            {section === "estadisticas" && "Estadísticas Institucionales"}
           </h1>
           <p style={{ fontSize: 13, color: C.textMuted, marginTop: 2 }}>
-            {section === "dashboard"
-              ? `Vista unificada del sistema · ${user?.companyName ?? ""}`
-              : "Gestión CRUD de usuarios del sistema"}
+            {section === "dashboard" && `Vista unificada del sistema · ${user?.companyName ?? ""}`}
+            {section === "usuarios" && "Gestión CRUD de usuarios del sistema"}
+            {section === "estadisticas" && "Métricas de rendimiento y actividad en la plataforma"}
           </p>
         </div>
 
@@ -111,6 +114,10 @@ export function AdminPanel() {
           <div style={{ background: C.card, borderRadius: 12, border: `1px solid ${C.border}`, padding: 24 }}>
             <CrudUsuarios />
           </div>
+        )}
+
+        {section === "estadisticas" && (
+          <StatisticsPanel companyId={user?.companyId} />
         )}
       </div>
 

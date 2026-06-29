@@ -2,9 +2,9 @@
 export type Role = "estudiante" | "profesor" | "admin";
 
 // ─── Secciones por rol ────────────────────────────────────────────────────
-export type StudentSection  = "dashboard" | "cursos" | "rendimiento";
-export type TeacherSection  = "dashboard" | "alumnos";
-export type AdminSection    = "dashboard" | "usuarios";
+export type StudentSection  = "dashboard" | "cursos" | "rendimiento" | "asistente";
+export type TeacherSection  = "dashboard" | "alumnos" | "detector-ia";
+export type AdminSection    = "dashboard" | "usuarios" | "estadisticas";
 
 // ─── Auth ─────────────────────────────────────────────────────────────────
 export interface AuthUser {

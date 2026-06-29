@@ -1,4 +1,5 @@
 import apiClient from "./client";
+import axios from "axios";
 import type { Role } from "@/types";
 
 // ─── Contratos del backend ────────────────────────────────────────────────
@@ -26,8 +27,20 @@ export const authApi = {
    * Body: { email, password }
    */
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
-    const { data } = await apiClient.post<LoginResponse>("/auth/login", credentials);
-    return data;
+    const attempt = () => apiClient.post<LoginResponse>("/auth/login", credentials);
+    try {
+      const { data } = await attempt();
+      return data;
+    } catch (err: unknown) {
+      const isTimeout =
+        axios.isAxiosError(err) &&
+        (err.code === "ECONNABORTED" || err.message?.includes("timeout"));
+      if (!isTimeout) throw err;
+      // Render free tier: primera petición tras inactividad puede tardar 30–60 s
+      await new Promise((r) => setTimeout(r, 2000));
+      const { data } = await attempt();
+      return data;
+    }
   },
 
   /**

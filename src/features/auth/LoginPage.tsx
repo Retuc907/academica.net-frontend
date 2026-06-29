@@ -9,10 +9,13 @@ export function LoginPage() {
   const [correo, setCorreo]     = useState("");
   const [password, setPassword] = useState("");
   const [error, setError]       = useState("");
+  const [loading, setLoading]   = useState(false);
 
   const handleLogin = async () => {
     setError("");
+    setLoading(true);
     const { ok, error: apiError } = await login(correo, password);
+    setLoading(false);
     if (!ok) setError(apiError ?? "Error al iniciar sesión.");
   };
 
@@ -112,7 +115,7 @@ export function LoginPage() {
           </div>
 
           {error && (
-            <div style={{ background: "#fde8ec", border: `1px solid ${C.accent}40`, borderRadius: 8, padding: "10px 14px", marginBottom: 16, display: "flex", alignItems: "center", gap: 8, color: C.accent, fontSize: 13 }}>
+            <div data-testid="error-message" style={{ background: "#fde8ec", border: `1px solid ${C.accent}40`, borderRadius: 8, padding: "10px 14px", marginBottom: 16, display: "flex", alignItems: "center", gap: 8, color: C.accent, fontSize: 13 }}>
               <AlertCircle size={15} />{error}
             </div>
           )}
@@ -124,6 +127,7 @@ export function LoginPage() {
             <div key={label} style={{ marginBottom: 14 }}>
               <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 5 }}>{label}</label>
               <input
+                data-testid={type === "email" ? "login-email" : "login-password"}
                 type={type}
                 value={value}
                 onChange={(e) => setter(e.target.value)}
@@ -136,8 +140,8 @@ export function LoginPage() {
             </div>
           ))}
 
-          <button onClick={handleLogin} style={{ width: "100%", background: C.primary, color: "#fff", border: "none", borderRadius: 8, padding: "11px 0", fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-            <Zap size={16} />Iniciar Sesión
+          <button data-testid="login-submit" onClick={handleLogin} disabled={loading} style={{ width: "100%", background: C.primary, color: "#fff", border: "none", borderRadius: 8, padding: "11px 0", fontSize: 15, fontWeight: 700, cursor: loading ? "wait" : "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, opacity: loading ? 0.8 : 1 }}>
+            <Zap size={16} />{loading ? "Conectando con el servidor…" : "Iniciar Sesión"}
           </button>
 
           <p style={{ fontSize: 11, color: C.textMuted, marginTop: 20, textAlign: "center" }}>

@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "esModuleInterop": true
+  },
+  "include": ["tests/**/*"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    },
+    "transpileOnly": true,
+    "experimentalResolver": false,
+    "skipProject": false
+  }
+}
