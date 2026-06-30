@@ -54,7 +54,7 @@ export function LoginPage() {
 
         <div style={{ flex: 1, zIndex: 1 }}>
           <h1 style={{ color: "#fff", fontSize: 34, fontWeight: 800, lineHeight: 1.25, marginBottom: 16, maxWidth: 380 }}>
-            Gestiona tu comunidad en un solo lugar
+            Gestiona tu comunidad estudiantíl en un solo lugar
           </h1>
           <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 14, lineHeight: 1.7, maxWidth: 360, marginBottom: 48 }}>
             Plataforma institucional para estudiantes, docentes y administradores.
