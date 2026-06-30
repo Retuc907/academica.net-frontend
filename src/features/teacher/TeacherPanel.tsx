@@ -14,7 +14,7 @@ export function TeacherPanel() {
   const [alumnos, setAlumnos]           = useState<StudentResponse[]>([]);
   const [loading, setLoading]           = useState(true);
   const [busquedaAlumno, setBusquedaAlumno] = useState("");
-  //const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   // Popup actividad
   const [popupActividad, setPopupActividad] = useState(false);
