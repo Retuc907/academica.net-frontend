@@ -1,0 +1,8 @@
+services:
+  frontend:
+    image: retuc907/frontend-react:latest
+    build: .
+    container_name: frontend-academica
+    ports:
+      - "8081:80"
+    

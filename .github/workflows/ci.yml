@@ -1,0 +1,36 @@
+name: CI Spring Boot Docker
+on:
+  push:
+    branches:
+      - main
+jobs:
+  
+  Build-fronted:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend_test
+    steps:
+      - name: Descargar codigo frontend
+        uses: actions/checkout@v3
+      - name: Construir imagen Docker del frontend
+        run: docker build -t frontend-basic .
+      - name: Login Docker
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Construir imagen Docker para DockerHub
+        run: docker build -t retuc907/frontend-react:latest .
+      - name: Subir imagen Docker a Dockerhub
+        run: docker push retuc907/frontend-react:latest
+
+  deploy-frontend:
+    needs: build-fronted
+    runs-on: self-hosted
+    steps:
+      - name: Actualizar contenedor frontend
+        run: |
+          cd "D:\academica-net-v3fix (1)\academica-netV3FIX"
+          docker compose pull frontend
+          docker compose up -d frontend
