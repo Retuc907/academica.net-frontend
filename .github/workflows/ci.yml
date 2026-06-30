@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: frontend_test
+        working-directory: .
     steps:
       - name: Descargar codigo frontend
         uses: actions/checkout@v3
