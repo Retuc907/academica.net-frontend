@@ -1,25 +1,14 @@
-# Etapa 1: Compilación (Build)
 FROM node:20-alpine AS build
 WORKDIR /app
-
-# Copiar archivos de dependencias
 COPY package*.json ./
-
-# Instalación limpia asegurando compatibilidad de peer dependencies
-RUN npm install --legacy-peer-deps
-
-# Copiar el resto del código y compilar
+RUN npm ci
 COPY . .
 
-ARG VITE_API_URL
-ENV VITE_API_URL=$VITE_API_URL
-
+ARG VITE_API_URL                 # <-- recibe el arg del compose
+ENV VITE_API_URL=$VITE_API_URL   # <-- lo expone a Vite
 RUN npm run build
 
-# Etapa 2: Servidor Web (Producción)
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
+COPY nginx.conf /etc/nginx/conf.d/default.conf   # SPA routing (ver abajo)
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]

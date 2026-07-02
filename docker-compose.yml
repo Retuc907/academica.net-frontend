@@ -4,7 +4,7 @@ services:
     build:
       context: .
       args:
-        VITE_API_URL: https://academianet-api.onrender.com/api
+        VITE_API_URL: http://localhost:8080/api
     container_name: frontend-academica
     ports:
       - "8081:80"
