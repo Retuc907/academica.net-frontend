@@ -3,7 +3,7 @@ import axios from "axios";
 export const TOKEN_KEY = "academianet_token";
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? "https://academianet-api.onrender.com/api",
+  baseURL: import.meta.env.VITE_API_URL,
   timeout: 15_000,
   headers: {
     "Content-Type": "application/json",
