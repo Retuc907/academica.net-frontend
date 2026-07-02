@@ -1,8 +1,10 @@
 services:
   frontend:
     image: retuc907/frontend-react:latest
-    build: .
+    build:
+      context: .
+      args:
+        VITE_API_URL: https://academianet-api.onrender.com/api
     container_name: frontend-academica
     ports:
       - "8081:80"
-    
