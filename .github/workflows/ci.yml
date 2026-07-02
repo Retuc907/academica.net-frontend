@@ -31,6 +31,6 @@ jobs:
     steps:
       - name: Actualizar contenedor frontend
         run: |
-          C:\Users\Angel Puentes\Downloads\final-project
+          cd $env:USER_DOCKER_COMPOSE_RELATIVE_PATH
           docker compose pull
           docker compose up -d --remove-orphans
