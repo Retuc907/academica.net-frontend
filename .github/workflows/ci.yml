@@ -31,6 +31,6 @@ jobs:
     steps:
       - name: Actualizar contenedor frontend
         run: |
-          cd "D:\academica-net-v3fix (1)\academica-netV3FIX"
+          C:\Users\Angel Puentes\Downloads\final-project
           docker compose pull
           docker compose up -d --remove-orphans
