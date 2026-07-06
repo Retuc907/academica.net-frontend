@@ -93,7 +93,7 @@ export function LoginPage() {
             <p style={{ fontSize: 11, fontWeight: 600, color: C.textMuted, marginBottom: 8, letterSpacing: "0.06em" }}>ACCESO RÁPIDO POR ROL</p>
             <div style={{ display: "flex", gap: 8 }}>
               {ROLES_RAPIDOS.map((r) => (
-                <button key={r.rol} onClick={() => rellenarCredenciales(r)} style={{
+                <button key={r.rol} data-testid={`login-role-${r.rol}`} onClick={() => rellenarCredenciales(r)} style={{
                   flex: 1, padding: "8px 6px", border: `1.5px solid ${r.color}22`,
                   borderRadius: 8, background: r.color + "0e", cursor: "pointer",
                   display: "flex", alignItems: "center", justifyContent: "center",

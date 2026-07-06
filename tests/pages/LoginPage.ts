@@ -29,6 +29,26 @@ export class LoginPage {
     return SeleniumUtils.leerTexto(this.driver, SELECTORES.mensajeError, timeout);
   }
 
+  async existeMensajeError(timeout = 90000): Promise<boolean> {
+    try {
+      await SeleniumUtils.esperarElemento(this.driver, SELECTORES.mensajeError, timeout);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  async clickRol(rol: "estudiante" | "profesor" | "admin"): Promise<void> {
+    const selector = By.css(`[data-testid='login-role-${rol}']`);
+    await SeleniumUtils.click(this.driver, selector);
+  }
+
+  async obtenerValorCampo(tipo: "email" | "password"): Promise<string> {
+    const selector = tipo === "email" ? SELECTORES.inputUsuario : SELECTORES.inputPassword;
+    const elemento = await this.driver.findElement(selector);
+    return elemento.getAttribute("value");
+  }
+
   async estaLogueado(timeout = 90000): Promise<boolean> {
     try {
       await SeleniumUtils.esperarElemento(this.driver, SELECTORES.dashboard, timeout);
