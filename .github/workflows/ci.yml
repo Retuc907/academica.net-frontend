@@ -89,6 +89,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Debug secrets presentes
+        run: |
+          echo "TOKEN set:        ${{ secrets.SONAR_TOKEN != '' }}"
+          echo "PROJECT_KEY set:  ${{ secrets.SONAR_PROJECT_KEY != '' }}"
+          echo "ORGANIZATION set: ${{ secrets.SONAR_ORGANIZATION != '' }}"
+
       - name: Analisis SonarQube (Quality Gate)
         uses: sonarsource/sonarqube-scan-action@v3
         env:
