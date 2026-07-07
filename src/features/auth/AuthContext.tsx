@@ -47,10 +47,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.error("❌ [AUTH] err.message   →", err?.message);
 
         const message =
-          err?.response?.data?.message ??
-          err?.response?.data?.error ??
-          err?.message ??
-          "Error desconocido.";
+          err?.code === "ECONNABORTED" || err?.message?.includes("timeout")
+            ? "El servidor está despertando (Render). Espera unos segundos e intenta de nuevo."
+            : err?.response?.data?.message ??
+              err?.response?.data?.error ??
+              err?.message ??
+              "Error desconocido.";
         return { ok: false, error: message };
       }
     },

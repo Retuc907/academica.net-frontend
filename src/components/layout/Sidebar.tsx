@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import {
   LayoutDashboard, BookOpen, TrendingUp, Users, LogOut,
   ChevronDown, GraduationCap, ClipboardList, User, Shield, Zap,
+  ScanLine, Sparkles, BarChart2,
 } from "lucide-react";
 import { BRAND as C } from "@/constants/brand";
 import { ROLES_RAPIDOS, MOCK_CREDENTIALS } from "@/constants/mockData";
@@ -11,17 +12,20 @@ interface NavItem { label: string; section: string; icon: React.ReactNode; }
 
 const NAV_BY_ROLE: Record<Role, NavItem[]> = {
   estudiante: [
-    { label: "Dashboard",    section: "dashboard",    icon: <LayoutDashboard size={16} /> },
-    { label: "Mis Cursos",   section: "cursos",       icon: <BookOpen size={16} /> },
-    { label: "Rendimiento",  section: "rendimiento",  icon: <TrendingUp size={16} /> },
+    { label: "Dashboard",           section: "dashboard",    icon: <LayoutDashboard size={16} /> },
+    { label: "Mis Cursos",          section: "cursos",       icon: <BookOpen size={16} /> },
+    { label: "Rendimiento",         section: "rendimiento",  icon: <TrendingUp size={16} /> },
+    { label: "Asistente Académico", section: "asistente",    icon: <Sparkles size={16} /> },
   ],
   profesor: [
-    { label: "Dashboard",    section: "dashboard",    icon: <LayoutDashboard size={16} /> },
-    { label: "Mis Alumnos",  section: "alumnos",      icon: <Users size={16} /> },
+    { label: "Dashboard",      section: "dashboard",    icon: <LayoutDashboard size={16} /> },
+    { label: "Mis Alumnos",    section: "alumnos",      icon: <Users size={16} /> },
+    { label: "Detector de IA", section: "detector-ia",  icon: <ScanLine size={16} /> },
   ],
   admin: [
-    { label: "Dashboard",    section: "dashboard",    icon: <LayoutDashboard size={16} /> },
-    { label: "Usuarios",     section: "usuarios",     icon: <ClipboardList size={16} /> },
+    { label: "Dashboard",     section: "dashboard",     icon: <LayoutDashboard size={16} /> },
+    { label: "Usuarios",      section: "usuarios",      icon: <ClipboardList size={16} /> },
+    { label: "Estadísticas",  section: "estadisticas",  icon: <BarChart2 size={16} /> },
   ],
 };
 

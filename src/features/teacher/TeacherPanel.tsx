@@ -7,6 +7,7 @@ import { studentsApi, gradesApi } from "@/api/students.api";
 import type { StudentResponse, GradeResponse } from "@/api/students.api";
 import { useAuth } from "@/features/auth/AuthContext";
 import type { TeacherSection } from "@/types";
+import { AiDetector } from "./AiDetector";
 
 export function TeacherPanel() {
   const { user, logout, switchUser } = useAuth();
@@ -129,7 +130,9 @@ export function TeacherPanel() {
         <div style={{ padding: "26px 28px" }}>
           <div style={{ marginBottom: 20 }}>
             <h1 style={{ fontSize: 21, fontWeight: 800, color: C.text }}>
-              {section === "dashboard" ? "Dashboard" : "Gestión de Alumnos"}
+              {section === "dashboard" && "Dashboard"}
+              {section === "alumnos" && "Gestión de Alumnos"}
+              {section === "detector-ia" && "Detector de IA"}
             </h1>
           </div>
 
@@ -142,6 +145,8 @@ export function TeacherPanel() {
               <KpiCard icon={<ClipboardList size={20} />} label="Alumnos en Riesgo"    value={String(enRiesgo)}        sub="Requieren atención" accent />
             </div>
           )}
+
+          {section === "detector-ia" && <AiDetector />}
 
           {/* Alumnos */}
           {section === "alumnos" && (

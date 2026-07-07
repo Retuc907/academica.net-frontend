@@ -11,9 +11,16 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+<<<<<<< HEAD
     "strict": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
+=======
+    "strict": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "types": ["node", "vite/client"],
+>>>>>>> 59ce82beee2272750f245fd34b60470b43b1fa89
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {

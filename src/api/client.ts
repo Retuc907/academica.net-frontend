@@ -22,7 +22,7 @@ apiClient.interceptors.request.use(
     const bodyLog = config.data
       ? (typeof config.data === "string" ? JSON.parse(config.data) : config.data)
       : {};
-    console.log("📤 [API] Request →", config.method?.toUpperCase(), config.baseURL + config.url, bodyLog);
+    console.log("📤 [API] Request →", config.method?.toUpperCase(), `${config.baseURL ?? ""}${config.url ?? ""}`, bodyLog);
     return config;
   },
   (error) => Promise.reject(error)
@@ -35,7 +35,12 @@ apiClient.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.error("📥 [API] Error →", error?.response?.status, error?.response?.config?.url, error?.response?.data);
+    const isTimeout = error.code === "ECONNABORTED" || error.message?.includes("timeout");
+    if (isTimeout) {
+      console.error("📥 [API] Timeout → el servidor tardó demasiado en responder (¿Render en cold start?)");
+    } else {
+      console.error("📥 [API] Error →", error?.response?.status, error?.response?.config?.url, error?.response?.data);
+    }
     if (error.response?.status === 401) {
       localStorage.removeItem(TOKEN_KEY);
       window.location.href = "/";
