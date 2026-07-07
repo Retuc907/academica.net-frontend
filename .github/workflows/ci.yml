@@ -1,18 +1,92 @@
-name: CI Spring Boot Docker
+name: CI Frontend — Build, Tests y Deploy
+
 on:
   push:
-    branches:
-      - main
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
 jobs:
-  
+  # 1. Compilación básica
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+
+  # 2. Pruebas E2E con Selenium
+  e2e-login:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - uses: browser-actions/setup-chrome@v1
+      - run: npm ci
+      - name: Build frontend
+        run: npm run build
+      - name: Start preview server
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 &
+          for i in $(seq 1 30); do
+            curl -sf http://127.0.0.1:4173 && break
+            sleep 2
+          done
+      - name: Run Selenium login tests
+        env:
+          CI: "true"
+          TEST_BASE_URL: http://127.0.0.1:4173
+          TEST_TIMEOUT: "120000"
+        run: npm run test:e2e
+      - name: Upload screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-screenshots
+          path: tests/screenshots/
+
+  # 3. Prueba de rendimiento con k6
+  performance:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - name: Build frontend
+        run: npm run build
+      - name: Start preview server
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 &
+          for i in $(seq 1 30); do
+            curl -sf http://127.0.0.1:4173 && break
+            sleep 2
+          done
+      - name: Run k6 performance test
+        uses: grafana/k6-action@v0.3.1
+        with:
+          filename: tests/performance/login-load-test.js
+        env:
+          BASE_URL: http://127.0.0.1:4173
+
+  # 4. Análisis Sonar + build y push de la imagen Docker
   Build-frontend:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: .
+    needs: [e2e-login, performance]
     steps:
       - name: Descargar codigo frontend
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Analisis SonarQube (Quality Gate)
@@ -26,8 +100,6 @@ jobs:
             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
             -Dsonar.sources=.
             -Dsonar.qualitygate.wait=true
-            
-
       - name: Construir imagen Docker del frontend
         run: docker build -t retuc907/frontend-academia:latest .
       - name: Login Docker
@@ -40,104 +112,14 @@ jobs:
       - name: Subir imagen Docker a Dockerhub
         run: docker push retuc907/frontend-react:latest
 
+  # 5. Deploy en el runner self-hosted
   deploy-frontend:
-    needs: build-frontend
+    needs: Build-frontend
     runs-on: self-hosted
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: Actualizar contenedor frontend
         run: |
           cd $env:USER_DOCKER_COMPOSE_RELATIVE_PATH
           docker compose pull
           docker compose up -d --remove-orphans
-name: CI — Build y E2E
-
-on:
-  push:
-    branches: [main, master, develop]
-  pull_request:
-    branches: [main, master, develop]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: npm
-
-      - run: npm ci
-      - run: npm run build
-
-  e2e-login:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: npm
-
-      - uses: browser-actions/setup-chrome@v1
-
-      - run: npm ci
-
-      - name: Build frontend
-        run: npm run build
-
-      - name: Start preview server
-        run: |
-          npm run preview -- --host 127.0.0.1 --port 4173 &
-          for i in $(seq 1 30); do
-            curl -sf http://127.0.0.1:4173 && break
-            sleep 2
-          done
-
-      - name: Run Selenium login tests
-        env:
-          CI: "true"
-          TEST_BASE_URL: http://127.0.0.1:4173
-          TEST_TIMEOUT: "120000"
-        run: npm run test:e2e
-
-      - name: Upload screenshots on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: e2e-screenshots
-          path: tests/screenshots/
-
-  performance:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: npm
-
-      - run: npm ci
-
-      - name: Build frontend
-        run: npm run build
-
-      - name: Start preview server
-        run: |
-          npm run preview -- --host 127.0.0.1 --port 4173 &
-          for i in $(seq 1 30); do
-            curl -sf http://127.0.0.1:4173 && break
-            sleep 2
-          done
-
-      - name: Run k6 performance test
-        uses: grafana/k6-action@v0.3.1
-        with:
-          filename: tests/performance/login-load-test.js
-        env:
-          BASE_URL: http://127.0.0.1:4173
