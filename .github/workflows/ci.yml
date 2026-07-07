@@ -13,6 +13,21 @@ jobs:
     steps:
       - name: Descargar codigo frontend
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Analisis SonarQube (Quality Gate)
+        uses: sonarsource/sonarqube-scan-action@v3
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          args: >
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+            -Dsonar.sources=.
+            -Dsonar.qualitygate.wait=true
+            
+
       - name: Construir imagen Docker del frontend
         run: docker build -t retuc907/frontend-academia:latest .
       - name: Login Docker
