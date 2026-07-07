@@ -14,7 +14,7 @@ export const options = {
 };
 
 export default function () {
-  const baseUrl = __ENV.BASE_URL || 'http://[::1]:5173';
+  const baseUrl = __ENV.BASE_URL || 'http://127.0.0.1:4173';
   const res = http.get(baseUrl);
 
   check(res, {
