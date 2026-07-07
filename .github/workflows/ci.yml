@@ -115,6 +115,10 @@ jobs:
     steps:
       - name: Actualizar contenedor frontend
         run: |
+          Write-Host "Valor de la variable: '$env:USER_DOCKER_COMPOSE_RELATIVE_PATH'"
           cd $env:USER_DOCKER_COMPOSE_RELATIVE_PATH
+          Write-Host "Carpeta actual: $(Get-Location)"
+          Get-ChildItem
           docker compose pull
           docker compose up -d --remove-orphans
+      
