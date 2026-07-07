@@ -60,7 +60,7 @@ export function LoginPage() {
             Gestiona tu comunidad académica en un solo lugar
           </h1>
           <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 14, lineHeight: 1.7, maxWidth: 360, marginBottom: 48 }}>
-            Plataforma institucional para estudiantes, docentes y administradores.
+            Plataforma institucional.
           </p>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, maxWidth: 380 }}>
