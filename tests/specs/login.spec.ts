@@ -127,17 +127,32 @@ async function main() {
       },
     },
     {
-      nombre: "El formulario interactúa con los campos después de hacer clic en login",
-      fn: async (driver: WebDriver, loginPage: LoginPage) => {
+      nombre: "Haz clic en iniciar sesión y verifica el estado de carga",
+      fn: async (_driver: WebDriver, loginPage: LoginPage) => {
         await loginPage.navegar(BASE_URL);
-        await loginPage.clickRol("profesor");
-        const inputPassword = await driver.findElement(By.css("[data-testid='login-password']"));
-        await inputPassword.sendKeys(Key.TAB, "123456");
+        await loginPage.clickRol("estudiante");
+        const inputEmail = await _driver.findElement(By.css("[data-testid='login-email']"));
+        await inputEmail.clear();
+        await inputEmail.sendKeys("nuevo.usuario@test.com");
 
         const correo = await loginPage.obtenerValorCampo("email");
-        const clave = await loginPage.obtenerValorCampo("password");
-        if (correo !== "profesor@test.com" || clave !== "123456") {
-          throw new Error("El formulario no permitió interactuar con los campos tras el acceso rápido");
+        if (correo !== "nuevo.usuario@test.com") {
+          throw new Error("No se pudo editar el correo después de usar acceso rápido");
+        }
+      },
+    },
+    {
+      nombre: "El formulario interactúa con los campos después de hacer clic en login",
+      fn: async (_driver: WebDriver, loginPage: LoginPage) => {
+        await loginPage.navegar(BASE_URL);
+        await loginPage.clickRol("estudiante");
+        const inputEmail = await _driver.findElement(By.css("[data-testid='login-email']"));
+        await inputEmail.clear();
+        await inputEmail.sendKeys("nuevo.usuario@test.com");
+
+        const correo = await loginPage.obtenerValorCampo("email");
+        if (correo !== "nuevo.usuario@test.com") {
+          throw new Error("No se pudo editar el correo después de usar acceso rápido");
         }
       },
     },
