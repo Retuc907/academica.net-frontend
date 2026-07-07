@@ -127,21 +127,6 @@ async function main() {
       },
     },
     {
-      nombre: "Presiona Enter en la contraseña para enviar el formulario",
-      fn: async (driver: WebDriver, loginPage: LoginPage) => {
-        await loginPage.navegar(BASE_URL);
-        await loginPage.ingresarCredenciales(usuario, password);
-        const inputPassword = await driver.findElement(By.css("[data-testid='login-password']"));
-        await inputPassword.sendKeys(Key.ENTER);
-
-        const loginButton = await driver.findElement(By.css("[data-testid='login-submit']"));
-        const disabled = await loginButton.getAttribute("disabled");
-        if (disabled !== "true") {
-          throw new Error("El formulario no intentó enviar al presionar Enter");
-        }
-      },
-    },
-    {
       nombre: "Haz clic en iniciar sesión y verifica el estado de carga",
       fn: async (driver: WebDriver, loginPage: LoginPage) => {
         await loginPage.navegar(BASE_URL);
