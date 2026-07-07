@@ -69,7 +69,7 @@ jobs:
       - name: Start preview server
         run: |
           npm run preview -- --host 127.0.0.1 --port 4173 &
-          for i in $(seq 1 30); do
+          for i in $(seq 1 60); do
             curl -sf http://127.0.0.1:4173 && break
             sleep 2
           done
