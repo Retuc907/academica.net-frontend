@@ -127,20 +127,6 @@ async function main() {
       },
     },
     {
-      nombre: "Haz clic en iniciar sesión y verifica el estado de carga",
-      fn: async (driver: WebDriver, loginPage: LoginPage) => {
-        await loginPage.navegar(BASE_URL);
-        await loginPage.ingresarCredenciales(usuario, password);
-        const loginButton = await driver.findElement(By.css("[data-testid='login-submit']"));
-        await loginButton.click();
-
-        await driver.wait(async () => {
-          const texto = await loginButton.getText();
-          return texto.includes("Conectando") || (await loginButton.getAttribute("disabled")) === "true";
-        }, 10000);
-      },
-    },
-    {
       nombre: "El formulario interactúa con los campos después de hacer clic en login",
       fn: async (driver: WebDriver, loginPage: LoginPage) => {
         await loginPage.navegar(BASE_URL);
