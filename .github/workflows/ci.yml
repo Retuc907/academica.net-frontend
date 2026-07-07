@@ -111,7 +111,8 @@ jobs:
   deploy-frontend:
     needs: Build-frontend
     runs-on: self-hosted
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    env:
+      USER_DOCKER_COMPOSE_RELATIVE_PATH: ${{ secrets.USER_DOCKER_COMPOSE_RELATIVE_PATH }}
     steps:
       - name: Actualizar contenedor frontend
         run: |
@@ -121,4 +122,3 @@ jobs:
           Get-ChildItem
           docker compose pull
           docker compose up -d --remove-orphans
-      
