@@ -35,15 +35,15 @@ jobs:
         run: npm run build
       - name: Start preview server
         run: |
-          npm run preview -- --host 127.0.0.1 --port 4173 &
-          for i in $(seq 1 30); do
-            curl -sf http://127.0.0.1:4173 && break
+          npm run dev -- --host 127.0.0.1 --port 5173 &
+          for i in $(seq 1 60); do
+            curl -sf http://127.0.0.1:5173 && break
             sleep 2
           done
       - name: Run Selenium login tests
         env:
           CI: "true"
-          TEST_BASE_URL: http://127.0.0.1:4173
+          TEST_BASE_URL: http://127.0.0.1:5173
           TEST_TIMEOUT: "120000"
         run: npm run test:e2e
       - name: Upload screenshots on failure
@@ -64,21 +64,10 @@ jobs:
           node-version: "20"
           cache: npm
       - run: npm ci
-      - name: Build frontend
-        run: npm run build
-      - name: Start preview server
-        run: |
-          npm run preview -- --host 127.0.0.1 --port 4173 &
-          for i in $(seq 1 30); do
-            curl -sf http://127.0.0.1:4173 && break
-            sleep 2
-          done
       - name: Run k6 performance test
         uses: grafana/k6-action@v0.3.1
         with:
           filename: tests/performance/login-load-test.js
-        env:
-          BASE_URL: http://127.0.0.1:4173
 
   # 4. Análisis Sonar + build y push de la imagen Docker
   Build-frontend:
