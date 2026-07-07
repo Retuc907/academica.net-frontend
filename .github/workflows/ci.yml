@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: "20"
           cache: npm
-      - run: npm ci
+      - run: npm ci 
       - run: npm run build
 
   # 2. Pruebas E2E con Selenium
@@ -103,8 +103,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - name: Construir imagen Docker para DockerHub
-        run: docker build --build-arg VITE_API_URL=${{ secrets.VITE_API_URL }} -t retuc907/frontend-react:latest .
-      - name: Subir imagen Docker a Dockerhub
+        run: docker build --build-arg VITE_API_URL=${{ secrets.VITE_API_URL }} --build-arg VITE_GEMINI_API_KEY=${{ secrets.VITE_GEMINI_API_KEY }} -t retuc907/frontend-react:latest .      - name: Subir imagen Docker a Dockerhub
         run: docker push retuc907/frontend-react:latest
 
   # 5. Deploy en el runner self-hosted
